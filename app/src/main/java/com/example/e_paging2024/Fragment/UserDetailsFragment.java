@@ -16,6 +16,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.example.e_paging2024.Controls.Methods;
 import com.example.e_paging2024.Database.AppDatabase;
 import com.example.e_paging2024.Models.User;
 import com.example.e_paging2024.R;
@@ -104,7 +105,14 @@ public class UserDetailsFragment extends Fragment {
                 mbinding.buttonEdit.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        mListener.updateUser(mUser);
+                        Methods.showCustomDialog(getActivity(), "Update User", null, "Yes", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                mListener.updateUser(mUser);
+                            }
+                        },"No",null);
+
+
                     }
                 });
 
@@ -112,7 +120,7 @@ public class UserDetailsFragment extends Fragment {
                     @Override
                     public void onClick(View v) {
                         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-                        builder.setTitle("Are you sure hutto?")
+                        builder.setTitle("Are you sure ?")
                                 .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                                     @Override
                                     public void onClick(DialogInterface dialog, int which) {

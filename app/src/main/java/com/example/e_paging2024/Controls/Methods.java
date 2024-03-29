@@ -6,15 +6,15 @@ import android.content.DialogInterface;
 import androidx.appcompat.app.AlertDialog;
 
 public class Methods {
-    public void Alerts(Context context,String title,String message,String positiveButton){
-        AlertDialog.Builder builder = new AlertDialog.Builder(context)
-                .setTitle(title)
-                .setMessage(message)
-                .setPositiveButton(positiveButton, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
 
-                    }
-                });
+   public static void showCustomDialog(Context context,String title, String message,
+                          String positiveBtnTitle, DialogInterface.OnClickListener positiveListener,
+                          String negativeBtnTitle, DialogInterface.OnClickListener negativeListener) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(context);
+        builder.setTitle(title)
+                .setMessage(message)
+                .setPositiveButton(positiveBtnTitle, positiveListener)
+                .setNegativeButton(negativeBtnTitle, negativeListener);
+        builder.create().show();
     }
 }

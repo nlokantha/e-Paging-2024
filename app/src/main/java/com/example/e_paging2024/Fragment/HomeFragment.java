@@ -41,6 +41,13 @@ public class HomeFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+        binding.buttonBluetooth.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mListener.gotoDeviceListFragment();
+            }
+        });
+
         binding.buttonSend.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -63,6 +70,9 @@ public class HomeFragment extends Fragment {
                 } else if (time.isEmpty()) {
                     binding.textInputLayoutTime.setError("Please Set Time");
                 }else {
+
+                    Toast.makeText(getActivity(), "Save Successful", Toast.LENGTH_SHORT).show();
+
                     binding.textInputLayoutName.setError("");
                     binding.textInputLayoutFlightNumber.setError("");
                     binding.textInputLayoutTime.setError("");
@@ -101,5 +111,6 @@ public class HomeFragment extends Fragment {
 
     public interface HomeFragmentListener{
         void gotoUserDetails();
+        void gotoDeviceListFragment();
     }
 }
