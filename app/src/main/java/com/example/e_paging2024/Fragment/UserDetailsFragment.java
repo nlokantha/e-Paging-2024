@@ -15,6 +15,7 @@ import androidx.room.Room;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.example.e_paging2024.Controls.Methods;
 import com.example.e_paging2024.Database.AppDatabase;
@@ -98,7 +99,7 @@ public class UserDetailsFragment extends Fragment {
                 mbinding.getRoot().setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-
+                        mListener.showInBoard(mUser);
                     }
                 });
 
@@ -158,6 +159,7 @@ public class UserDetailsFragment extends Fragment {
     public interface UserDetailsFragmentListener {
         void cancleUserDetails();
         void updateUser(User user);
+        void showInBoard(User user);
     }
 
 

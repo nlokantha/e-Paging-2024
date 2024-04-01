@@ -19,10 +19,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.example.e_paging2024.R;
 import com.example.e_paging2024.databinding.DeviceListItemsBinding;
 import com.example.e_paging2024.databinding.FragmentDeviceListBinding;
-import com.example.e_paging2024.databinding.UserListItemsBinding;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -69,10 +67,11 @@ public class DeviceListFragment extends Fragment {
         binding.buttonBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mListener.cancleDeviceListFragment();
+                mListener.cancelDeviceListFragment();
             }
         });
     }
+
     private void getPairedDevices() {
         @SuppressLint("MissingPermission") Set<BluetoothDevice> pairedDevices = bluetoothAdapter.getBondedDevices();
         deviceList.addAll(pairedDevices);
@@ -86,20 +85,16 @@ public class DeviceListFragment extends Fragment {
             getPairedDevices();
         }
     }
-
-
-    class DeviceAdapter extends RecyclerView.Adapter<DeviceAdapter.DeviceViewHolder>{
+    class DeviceAdapter extends RecyclerView.Adapter<DeviceAdapter.DeviceViewHolder> {
         @NonNull
         @Override
         public DeviceViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
             return new DeviceListFragment.DeviceAdapter.DeviceViewHolder(DeviceListItemsBinding.inflate(getLayoutInflater(), parent, false));
         }
-
         @Override
         public void onBindViewHolder(@NonNull DeviceViewHolder holder, int position) {
-            device =deviceList.get(position);
+            device = deviceList.get(position);
             holder.setupUI(device);
-
         }
 
         @Override
@@ -107,26 +102,29 @@ public class DeviceListFragment extends Fragment {
             return deviceList.size();
         }
 
-        class DeviceViewHolder extends RecyclerView.ViewHolder{
+        class DeviceViewHolder extends RecyclerView.ViewHolder {
             DeviceListItemsBinding mBinding;
+
             public DeviceViewHolder(DeviceListItemsBinding vhBinding) {
                 super(vhBinding.getRoot());
                 mBinding = vhBinding;
-                mBinding.getRoot().setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        mListener.selectedDevice(device);
 
-                    }
-                });
             }
 
             @SuppressLint("MissingPermission")
             public void setupUI(BluetoothDevice device) {
                 mBinding.textViewDeviceName.setText(device.getName().toString());
+                mBinding.getRoot().setOnClickListener(new View.OnClickListener() {
+                    @SuppressLint("MissingPermission")
+                    @Override
+                    public void onClick(View v) {
+                        mListener.selectedDevice(device);
+                    }
+                });
             }
         }
     }
+
     DeviceListFragmentListener mListener;
 
     @Override
@@ -135,8 +133,9 @@ public class DeviceListFragment extends Fragment {
         mListener = (DeviceListFragmentListener) context;
     }
 
-    public interface DeviceListFragmentListener{
-        void cancleDeviceListFragment();
+    public interface DeviceListFragmentListener {
+        void cancelDeviceListFragment();
+
         void selectedDevice(BluetoothDevice device);
     }
 }

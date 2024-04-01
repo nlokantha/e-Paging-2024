@@ -1,5 +1,7 @@
 package com.example.e_paging2024.Fragment;
 
+import android.annotation.SuppressLint;
+import android.bluetooth.BluetoothDevice;
 import android.content.Context;
 import android.os.Bundle;
 
@@ -27,16 +29,23 @@ public class HomeFragment extends Fragment {
     FragmentHomeBinding binding;
     AppDatabase db;
 
+    private BluetoothDevice device;
+
+    public void setDevice(BluetoothDevice device) {
+        this.device = device;
+    }
+
     public HomeFragment() {
         // Required empty public constructor
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,Bundle savedInstanceState) {
-        binding = FragmentHomeBinding.inflate(inflater,container,false);
-        return  binding.getRoot();
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        binding = FragmentHomeBinding.inflate(inflater, container, false);
+        return binding.getRoot();
     }
 
+    @SuppressLint("MissingPermission")
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
@@ -51,7 +60,14 @@ public class HomeFragment extends Fragment {
         binding.buttonSend.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(getActivity(), "Setup Bluetooth Connection", Toast.LENGTH_SHORT).show();
+
+                String name = binding.textInputEditTextName.getText().toString();
+                String flightNumber = binding.textInputEditTextFlightNumber.getText().toString();
+                String time = binding.textInputEditTextTime.getText().toString();
+
+                String combine = name+"$"+flightNumber+"$"+time+"$";
+                mListener.sendtoEpage(combine);
+
             }
         });
 
@@ -62,14 +78,14 @@ public class HomeFragment extends Fragment {
                 String flightNumber = binding.textInputEditTextFlightNumber.getText().toString();
                 String time = binding.textInputEditTextTime.getText().toString();
 
-                if (name.isEmpty()){
+                if (name.isEmpty()) {
                     binding.textInputLayoutName.setError("Please Enter Name");
 
                 } else if (flightNumber.isEmpty()) {
                     binding.textInputLayoutFlightNumber.setError("Please Enter Flight Number");
                 } else if (time.isEmpty()) {
                     binding.textInputLayoutTime.setError("Please Set Time");
-                }else {
+                } else {
 
                     Toast.makeText(getActivity(), "Save Successful", Toast.LENGTH_SHORT).show();
 
@@ -77,12 +93,12 @@ public class HomeFragment extends Fragment {
                     binding.textInputLayoutFlightNumber.setError("");
                     binding.textInputLayoutTime.setError("");
 
-                    db = Room.databaseBuilder(getActivity(), AppDatabase.class,"users-db")
+                    db = Room.databaseBuilder(getActivity(), AppDatabase.class, "users-db")
                             .fallbackToDestructiveMigration()
                             .allowMainThreadQueries()
                             .build();
 
-                    User user = new User(name,flightNumber,time);
+                    User user = new User(name, flightNumber, time);
                     db.userDao().insert(user);
 
                     binding.textInputEditTextName.setText("");
@@ -100,7 +116,14 @@ public class HomeFragment extends Fragment {
             }
         });
 
+        if (device == null) {
+            binding.textViewBluetooth.setText("Please Select Your e-Paging Board");
+        } else {
+            binding.textViewBluetooth.setText("Connect With - " + device.getName());
+        }
+
     }
+
     HomeFragmentListener mListener;
 
     @Override
@@ -109,8 +132,10 @@ public class HomeFragment extends Fragment {
         mListener = (HomeFragmentListener) context;
     }
 
-    public interface HomeFragmentListener{
+    public interface HomeFragmentListener {
         void gotoUserDetails();
+
         void gotoDeviceListFragment();
+        void sendtoEpage(String combine);
     }
 }
