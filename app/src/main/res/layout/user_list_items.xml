@@ -10,7 +10,7 @@
         android:layout_height="wrap_content"
         style="@style/ThemeOverlay.Material3.AutoCompleteTextView.OutlinedBox"
         app:strokeWidth="1dp"
-        app:strokeColor="@color/newc"
+        app:strokeColor="@color/dark_blue"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 

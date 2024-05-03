@@ -2,11 +2,14 @@ package com.example.e_paging2024.Fragment;
 
 import android.content.Context;
 import android.content.DialogInterface;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.widget.AppCompatButton;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -120,18 +123,19 @@ public class UserDetailsFragment extends Fragment {
                 mbinding.buttonDelete.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-                        builder.setTitle("Are you sure ?")
-                                .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
-                                    @Override
-                                    public void onClick(DialogInterface dialog, int which) {
-                                        db.userDao().delete(mUser);
-                                        users.remove(mUser);
-                                        notifyItemRemoved(getAdapterPosition());
-                                    }
-                                })
-                                .setNegativeButton("No", null)
-                                .create().show();
+//                        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+//                        builder.setTitle("Are you sure ?")
+//                                .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+//                                    @Override
+//                                    public void onClick(DialogInterface dialog, int which) {
+//                                        db.userDao().delete(mUser);
+//                                        users.remove(mUser);
+//                                        notifyItemRemoved(getAdapterPosition());
+//                                    }
+//                                })
+//                                .setNegativeButton("No", null)
+//                                .create().show();
+                        saveCustomDialog();
                     }
                 });
 
@@ -146,6 +150,33 @@ public class UserDetailsFragment extends Fragment {
             }
         }
 
+    }
+    private void saveCustomDialog(){
+        AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+        builder.setCancelable(false);
+        LayoutInflater inflater = getActivity().getLayoutInflater();
+        View alertDialog = inflater.inflate(R.layout.custom_dialog,null);
+        builder.setView(alertDialog);
+
+        AlertDialog alert = builder.create();
+        alert.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        alert.show();
+
+        AppCompatButton buttonClose = alertDialog.findViewById(R.id.buttonClose);
+        AppCompatButton buttonConfirm = alertDialog.findViewById(R.id.buttonSelectNext);
+        buttonClose.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                alert.dismiss();
+            }
+        });
+
+        buttonConfirm.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+            }
+        });
     }
 
     UserDetailsFragmentListener mListener;

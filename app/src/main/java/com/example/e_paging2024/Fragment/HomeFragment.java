@@ -1,10 +1,18 @@
 package com.example.e_paging2024.Fragment;
 
+import static android.app.Activity.RESULT_OK;
+
 import android.annotation.SuppressLint;
+import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 
+import androidx.activity.result.ActivityResult;
+import androidx.activity.result.ActivityResultCallback;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
@@ -30,10 +38,23 @@ public class HomeFragment extends Fragment {
     AppDatabase db;
 
     private BluetoothDevice device;
+    BluetoothAdapter bluetoothAdapter;
+    public static final int REQUEST_ENABLE_BT = 100;
 
     public void setDevice(BluetoothDevice device) {
         this.device = device;
     }
+    ActivityResultLauncher<Intent> startForResult = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), new ActivityResultCallback<ActivityResult>() {
+        @Override
+        public void onActivityResult(ActivityResult result) {
+            if (result != null && result.getResultCode() == RESULT_OK){
+                mListener.gotoDeviceListFragment();
+            }else {
+                Toast.makeText(getActivity(), "You Must Turn On IT Broo", Toast.LENGTH_SHORT).show();
+            }
+
+        }
+    });
 
     public HomeFragment() {
         // Required empty public constructor
@@ -49,11 +70,17 @@ public class HomeFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
 
         binding.buttonBluetooth.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mListener.gotoDeviceListFragment();
+                if (!bluetoothAdapter.isEnabled()){
+                    Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
+                    startForResult.launch(enableBtIntent);
+                }else {
+                    mListener.gotoDeviceListFragment();
+                }
             }
         });
 
