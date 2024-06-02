@@ -9,6 +9,7 @@ import java.io.Serializable;
 public class User implements Serializable {
     @PrimaryKey(autoGenerate = true)
     public int uid;
+
     public String name;
     public String filghtNumber;
     public String time;

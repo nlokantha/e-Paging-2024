@@ -6,6 +6,7 @@ import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.content.Context;
 import android.content.pm.PackageManager;
+import android.os.Build;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -18,6 +19,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.example.e_paging2024.databinding.DeviceListItemsBinding;
 import com.example.e_paging2024.databinding.FragmentDeviceListBinding;
@@ -26,14 +28,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
-
 public class DeviceListFragment extends Fragment {
     List<BluetoothDevice> deviceList = new ArrayList<>();
     DeviceAdapter adapter = new DeviceAdapter();
     private static final int REQUEST_BLUETOOTH_PERMISSION = 100;
     BluetoothAdapter bluetoothAdapter;
-    BluetoothDevice device;
-
 
     public DeviceListFragment() {
         // Required empty public constructor
@@ -56,11 +55,8 @@ public class DeviceListFragment extends Fragment {
             return;
         }
 
-        if (ActivityCompat.checkSelfPermission(requireContext(), Manifest.permission.BLUETOOTH_CONNECT) != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(requireActivity(), new String[]{Manifest.permission.BLUETOOTH_CONNECT}, REQUEST_BLUETOOTH_PERMISSION);
-        } else {
-            getPairedDevices();
-        }
+        checkPermissionsAndStart();
+
         binding.recyclerView.setLayoutManager(new LinearLayoutManager(requireContext()));
         binding.recyclerView.setAdapter(adapter);
 
@@ -72,8 +68,44 @@ public class DeviceListFragment extends Fragment {
         });
     }
 
+    private void checkPermissionsAndStart() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+            // Android 12 and above
+            if (ActivityCompat.checkSelfPermission(requireContext(), Manifest.permission.BLUETOOTH_SCAN) != PackageManager.PERMISSION_GRANTED ||
+                    ActivityCompat.checkSelfPermission(requireContext(), Manifest.permission.BLUETOOTH_CONNECT) != PackageManager.PERMISSION_GRANTED ||
+                    ActivityCompat.checkSelfPermission(requireContext(), Manifest.permission.BLUETOOTH_ADVERTISE) != PackageManager.PERMISSION_GRANTED) {
+                requestPermissions(new String[]{
+                                Manifest.permission.BLUETOOTH_SCAN,
+                                Manifest.permission.BLUETOOTH_CONNECT,
+                                Manifest.permission.BLUETOOTH_ADVERTISE},
+                        REQUEST_BLUETOOTH_PERMISSION);
+            } else {
+                getPairedDevices();
+            }
+        } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            // Android 6 to Android 11
+            if (ActivityCompat.checkSelfPermission(requireContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED ||
+                    ActivityCompat.checkSelfPermission(requireContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED ||
+                    ActivityCompat.checkSelfPermission(requireContext(), Manifest.permission.BLUETOOTH) != PackageManager.PERMISSION_GRANTED ||
+                    ActivityCompat.checkSelfPermission(requireContext(), Manifest.permission.BLUETOOTH_ADMIN) != PackageManager.PERMISSION_GRANTED) {
+                requestPermissions(new String[]{
+                                Manifest.permission.ACCESS_FINE_LOCATION,
+                                Manifest.permission.ACCESS_COARSE_LOCATION,
+                                Manifest.permission.BLUETOOTH,
+                                Manifest.permission.BLUETOOTH_ADMIN},
+                        REQUEST_BLUETOOTH_PERMISSION);
+            } else {
+                getPairedDevices();
+            }
+        } else {
+            // Below Android 6, permissions are granted at install time
+            getPairedDevices();
+        }
+    }
+
+    @SuppressLint("MissingPermission")
     private void getPairedDevices() {
-        @SuppressLint("MissingPermission") Set<BluetoothDevice> pairedDevices = bluetoothAdapter.getBondedDevices();
+        Set<BluetoothDevice> pairedDevices = bluetoothAdapter.getBondedDevices();
         deviceList.addAll(pairedDevices);
         adapter.notifyDataSetChanged();
     }
@@ -81,19 +113,32 @@ public class DeviceListFragment extends Fragment {
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        if (requestCode == REQUEST_BLUETOOTH_PERMISSION && grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-            getPairedDevices();
+        if (requestCode == REQUEST_BLUETOOTH_PERMISSION) {
+            boolean allGranted = true;
+            for (int result : grantResults) {
+                if (result != PackageManager.PERMISSION_GRANTED) {
+                    allGranted = false;
+                    break;
+                }
+            }
+            if (allGranted) {
+                getPairedDevices();
+            } else {
+                Toast.makeText(getContext(), "Bluetooth permissions are required", Toast.LENGTH_SHORT).show();
+            }
         }
     }
+
     class DeviceAdapter extends RecyclerView.Adapter<DeviceAdapter.DeviceViewHolder> {
         @NonNull
         @Override
         public DeviceViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-            return new DeviceListFragment.DeviceAdapter.DeviceViewHolder(DeviceListItemsBinding.inflate(getLayoutInflater(), parent, false));
+            return new DeviceViewHolder(DeviceListItemsBinding.inflate(getLayoutInflater(), parent, false));
         }
+
         @Override
         public void onBindViewHolder(@NonNull DeviceViewHolder holder, int position) {
-            device = deviceList.get(position);
+            BluetoothDevice device = deviceList.get(position);
             holder.setupUI(device);
         }
 
@@ -108,14 +153,12 @@ public class DeviceListFragment extends Fragment {
             public DeviceViewHolder(DeviceListItemsBinding vhBinding) {
                 super(vhBinding.getRoot());
                 mBinding = vhBinding;
-
             }
 
             @SuppressLint("MissingPermission")
             public void setupUI(BluetoothDevice device) {
-                mBinding.textViewDeviceName.setText(device.getName().toString());
+                mBinding.textViewDeviceName.setText(device.getName());
                 mBinding.getRoot().setOnClickListener(new View.OnClickListener() {
-                    @SuppressLint("MissingPermission")
                     @Override
                     public void onClick(View v) {
                         mListener.selectedDevice(device);

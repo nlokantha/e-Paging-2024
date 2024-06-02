@@ -150,6 +150,7 @@ public class MainActivity extends AppCompatActivity implements HomeFragment.Home
         }
     }
 
+
     @Override
     protected void onDestroy() {
         super.onDestroy();
