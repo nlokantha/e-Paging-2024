@@ -119,6 +119,7 @@ public class HomeFragment extends Fragment {
 
                     binding.textInputEditTextName.setText("");
                     binding.textInputEditTextFlightNumber.setText("");
+                    binding.textInputEditTextName.requestFocus();
                 }
             }
         });

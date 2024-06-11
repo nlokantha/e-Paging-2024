@@ -9,7 +9,7 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/constraintLayout"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="100dp"
         android:background="@drawable/header"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -20,11 +20,12 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="25dp"
-            android:layout_marginTop="20dp"
             android:fontFamily="sans-serif"
             android:text="Please Select Your e-Paging Board"
             android:textColor="@color/white"
             android:textSize="16sp"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
@@ -32,9 +33,9 @@
             android:id="@+id/buttonBluetooth"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
             android:layout_marginEnd="25dp"
             android:src="@drawable/bluetooth_white"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
@@ -45,14 +46,7 @@
             android:orientation="vertical"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent">
-
-            <ImageView
-                android:layout_width="200dp"
-                android:layout_height="200dp"
-                android:src="@drawable/logo2" />
-
-        </LinearLayout>
+            app:layout_constraintTop_toTopOf="parent" />
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>
@@ -63,10 +57,13 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="30dp"
-        android:layout_marginTop="25dp"
+        android:layout_marginTop="50dp"
         android:layout_marginEnd="30dp"
         android:hint="Guest Name"
+        android:textAlignment="center"
         app:counterEnabled="true"
+        android:textColorHint="@color/light_green"
+        app:counterTextColor="@color/red"
         app:counterMaxLength="36"
         app:endIconMode="clear_text"
         app:errorEnabled="true"
@@ -78,7 +75,10 @@
             android:id="@+id/textInputEditTextName"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:maxLength="36" />
+            android:background="@drawable/time_background"
+            android:textAlignment="center"
+            android:maxLength="36"
+            />
     </com.google.android.material.textfield.TextInputLayout>
 
     <com.google.android.material.textfield.TextInputLayout
@@ -86,9 +86,12 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="30dp"
-        android:layout_marginTop="15dp"
+        android:layout_marginTop="25dp"
         android:layout_marginEnd="30dp"
         android:hint="Flight Number"
+        android:textAlignment="center"
+        android:textColorHint="@color/light_green"
+        app:counterTextColor="@color/red"
         app:counterEnabled="true"
         app:counterMaxLength="7"
         app:endIconMode="clear_text"
@@ -101,6 +104,8 @@
             android:id="@+id/textInputEditTextFlightNumber"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:background="@drawable/time_background"
+            android:textAlignment="center"
             android:maxLength="7" />
     </com.google.android.material.textfield.TextInputLayout>
 
@@ -123,6 +128,7 @@
             android:id="@+id/textInputEditTextTime"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:background="@drawable/time_background"
             android:inputType="time" />
 
     </com.google.android.material.textfield.TextInputLayout>
@@ -131,9 +137,11 @@
         android:id="@+id/timePicker"
         android:layout_width="wrap_content"
         android:layout_height="150dp"
-        android:layout_marginTop="5dp"
+        android:layout_marginTop="25dp"
         android:background="@drawable/time_background"
         android:timePickerMode="spinner"
+        android:numbersTextColor="@color/light_green"
+        android:numbersInnerTextColor="@color/light_green"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textInputLayoutFlightNumber" />
@@ -145,10 +153,11 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="25dp"
         android:layout_marginEnd="25dp"
-        android:layout_marginBottom="10dp"
+        android:layout_marginBottom="5dp"
         android:text="Update e-Paging Board"
-        app:cornerRadius="10sp"
         android:textColor="@color/white"
+        android:backgroundTint="@color/light_green"
+        app:cornerRadius="10sp"
         app:iconGravity="textStart"
         app:layout_constraintBottom_toTopOf="@+id/buttonSave"
         app:layout_constraintEnd_toEndOf="parent"
@@ -161,12 +170,13 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="25dp"
-        android:layout_marginBottom="25dp"
+        android:layout_marginBottom="5dp"
         android:text="Save"
         android:textColor="@color/white"
         app:cornerRadius="10sp"
         app:icon="@android:drawable/ic_input_add"
         app:iconGravity="textStart"
+        android:backgroundTint="@color/red"
         app:iconTint="@color/white"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/buttonViewData"
@@ -179,10 +189,11 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="5dp"
         android:layout_marginEnd="25dp"
-        android:layout_marginBottom="25dp"
+        android:layout_marginBottom="5dp"
         android:text="View Data"
-        app:cornerRadius="10sp"
         android:textColor="@color/white"
+        app:cornerRadius="10sp"
+        android:backgroundTint="@color/newc"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"

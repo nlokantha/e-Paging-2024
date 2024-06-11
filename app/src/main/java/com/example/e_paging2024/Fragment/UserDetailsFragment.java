@@ -102,19 +102,20 @@ public class UserDetailsFragment extends Fragment {
                 mbinding.getRoot().setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        mListener.showInBoard(mUser);
+                        UpdateEPageCustomDialog(mUser);
                     }
                 });
 
                 mbinding.buttonEdit.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        Methods.showCustomDialog(getActivity(), "Update User", null, "Yes", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                mListener.updateUser(mUser);
-                            }
-                        },"No",null);
+//                        Methods.showCustomDialog(getActivity(), "Update User", null, "Yes", new DialogInterface.OnClickListener() {
+//                            @Override
+//                            public void onClick(DialogInterface dialog, int which) {
+//                                mListener.updateUser(mUser);
+//                            }
+//                        },"No",null);
+                        UpdateCustomDialog(mUser);
 
 
                     }
@@ -135,7 +136,7 @@ public class UserDetailsFragment extends Fragment {
 //                                })
 //                                .setNegativeButton("No", null)
 //                                .create().show();
-                        saveCustomDialog();
+                        DeleteCustomDialog(mUser, getAdapterPosition());
                     }
                 });
 
@@ -151,9 +152,9 @@ public class UserDetailsFragment extends Fragment {
         }
 
     }
-    private void saveCustomDialog(){
+    private void DeleteCustomDialog(User user, int position){
         AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
-        builder.setCancelable(false);
+        builder.setCancelable(true);
         LayoutInflater inflater = getActivity().getLayoutInflater();
         View alertDialog = inflater.inflate(R.layout.custom_dialog,null);
         builder.setView(alertDialog);
@@ -174,7 +175,66 @@ public class UserDetailsFragment extends Fragment {
         buttonConfirm.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                db.userDao().delete(user);
+                users.remove(position);
+                adapter.notifyItemRemoved(position);
+                alert.dismiss();
+            }
+        });
+    }
+    private void UpdateCustomDialog(User user){
+        AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+        builder.setCancelable(true);
+        LayoutInflater inflater = getActivity().getLayoutInflater();
+        View alertDialog = inflater.inflate(R.layout.update_custom_dialog,null);
+        builder.setView(alertDialog);
 
+        AlertDialog alert = builder.create();
+        alert.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        alert.show();
+
+        AppCompatButton buttonClose = alertDialog.findViewById(R.id.buttonClose);
+        AppCompatButton buttonConfirm = alertDialog.findViewById(R.id.buttonSelectNext);
+        buttonClose.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                alert.dismiss();
+            }
+        });
+
+        buttonConfirm.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mListener.updateUser(user);
+                alert.dismiss();
+            }
+        });
+    }
+    private void UpdateEPageCustomDialog(User user){
+        AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+        builder.setCancelable(true);
+        LayoutInflater inflater = getActivity().getLayoutInflater();
+        View alertDialog = inflater.inflate(R.layout.send_custom_dialog,null);
+        builder.setView(alertDialog);
+
+        AlertDialog alert = builder.create();
+        alert.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        alert.show();
+
+        AppCompatButton buttonClose = alertDialog.findViewById(R.id.buttonClose);
+        AppCompatButton buttonConfirm = alertDialog.findViewById(R.id.buttonSelectNext);
+        buttonClose.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                alert.dismiss();
+            }
+        });
+
+        buttonConfirm.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mListener.showInBoard(user);
+                alert.dismiss();
             }
         });
     }

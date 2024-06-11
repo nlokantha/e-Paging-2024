@@ -10,7 +10,7 @@
         android:layout_height="wrap_content"
         style="@style/Widget.Material3.CardView.Outlined"
         app:strokeWidth="1dp"
-        app:strokeColor="@color/black"
+        app:strokeColor="@color/light_green"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
@@ -24,7 +24,10 @@
                 android:id="@+id/textViewDeviceName"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Hi I am Namal"
+                android:text="Device Name"
+                android:textColor="@color/red"
+                android:textStyle="bold"
+                android:textSize="18sp"
                 android:layout_margin="15dp"/>
 
         </LinearLayout>
